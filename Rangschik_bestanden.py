@@ -8,9 +8,9 @@ while True:
     time.sleep(10*1)
 
 
-    sourcepath = 'C:/Users/***/Downloads/'
+    sourcepath = 'C:/Users/ovest/Downloads/'
     sourcefiles = os.listdir(sourcepath)
-    overig = 'C:/Users/***/Downloads/Overig'
+    overig = 'C:/Users/ovest/Downloads/Overig'
 
 #Dictionary for destinations + extensions
     infodict = {
@@ -21,7 +21,6 @@ while True:
                 sourcepath + '3D': ['stl', 'f3d', 'gcode',],
                 sourcepath + 'Powerpoint': ['ppt', 'pptx',],
                 sourcepath + 'Gecomprimeerd': ['rar', 'zip', '7z',],
-                sourcepath + 'Torrents': ['torrent',],
                 sourcepath + 'Toepassingen en schrijven': ['exe', 'msi', 'iso', 'img',],
                 sourcepath + 'Excel': ['xls', 'xlsx',],
                 sourcepath + 'Overig': '',
@@ -31,9 +30,10 @@ while True:
         for file in sourcefiles:
             filefinish = 0
             foldercheck= 0
+            counter = 1
             dest = overig
             checkfile = sourcepath + file
-	
+
 	#Checking whether the file is or is not a folder.
             if checkfile in infodict:
                 foldercheck = 1
@@ -50,8 +50,17 @@ while True:
                         os.makedirs(overig)
             
                 #Move files after determination which file and extension the program is dealing with.
-                try:
-                    shutil.move(sourcepath + file, dest)
-                except shutil.Error: #When original file already exists, add '(2)' to the filename, when there are three duplicates the system rewrites the file with '(2)' in the filename.
-                    shutil.move(sourcepath + file, dest + '/' + '(2)' + file)
-    print('Opgeruimd staat netjes')
+                for error in range (3):
+                    try:
+                        if counter == 1:
+                            shutil.move(sourcepath + file, dest)
+                            break
+                        if counter > 1:
+                            shutil.move(sourcepath + file, dest + '/' + '(' + str(counter) + ')' + file)
+                            break
+                    except shutil.Error: #When original file already exists, add '(2)' to the filename, when there are three duplicates the system rewrites the file with '(2)' in the filename.
+                        #shutil.move(sourcepath + file, dest + '/' + '(2)' + file)
+                        counter += 1
+                        print(counter)
+    
+        print('Opgeruimd staat netjes')
